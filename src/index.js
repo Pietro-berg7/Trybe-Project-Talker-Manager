@@ -1,10 +1,12 @@
 const express = require('express');
 
-const tokenGenerator = require('./authentication/tokenGenerator');
-const getTalkers = require('./helpers/getTalkers');
 const getById = require('./helpers/getById');
+const newTalker = require('./helpers/newTalker');
+const getTalkers = require('./helpers/getTalkers');
 const emailValidate = require('./middlewares/emailValidate');
+const tokenGenerator = require('./authentication/tokenGenerator');
 const passwordValidate = require('./middlewares/passwordValidate');
+const authorizationValidate = require('./middlewares/authorizationValidate');
 
 const app = express();
 app.use(express.json());
@@ -42,6 +44,13 @@ app.get('/talker/:id', async (req, res) => {
 app.post('/login', emailValidate, passwordValidate, (_req, res) => {
   const token = tokenGenerator();
   return res.status(HTTP_OK_STATUS).json({ token });
+});
+
+// endpoint POST /talker
+app.post('/talker', authorizationValidate, async (req, res) => {
+  const getNewTalker = req.body;
+  const addTalker = await newTalker(getNewTalker);
+  return res.status(201).json(addTalker);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
