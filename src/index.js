@@ -1,6 +1,10 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
+
+const tokenGenerator = require('./authentication/tokenGenerator');
+const getTalkers = require('./helpers/getTalkers');
+const getById = require('./helpers/getById');
+const emailValidate = require('./middlewares/emailValidate');
+const passwordValidate = require('./middlewares/passwordValidate');
 
 const app = express();
 app.use(express.json());
@@ -8,28 +12,6 @@ app.use(express.json());
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND = 404;
 const PORT = '3000';
-
-const getTalkers = async () => {
-  const data = await fs.promises.readFile(path.resolve(__dirname, './talker.json'));
-  const json = JSON.parse(data);
-  return json;
-};
-
-const getById = async (id) => {
-  const data = await getTalkers();
-  return data.find((e) => e.id === id);
-};
-
-const randomToken = () => {
-  let token = '';
-  const allChar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < 16; i += 1) {
-    token += allChar.charAt(Math.floor(Math.random() * allChar.length));
-  }
-
-  return token;
-};
 
 // endpoint GET /talker
 app.get('/talker', async (_req, res) => {
@@ -57,8 +39,8 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // endpoint POST /login
-app.post('/login', (_req, res) => {
-  const token = randomToken();
+app.post('/login', emailValidate, passwordValidate, (_req, res) => {
+  const token = tokenGenerator();
   return res.status(HTTP_OK_STATUS).json({ token });
 });
 
