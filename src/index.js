@@ -20,6 +20,17 @@ const getById = async (id) => {
   return data.find((e) => e.id === id);
 };
 
+const randomToken = () => {
+  let token = '';
+  const allChar = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < 16; i + 1) {
+    token += allChar.charAt(Math.floor(Math.random() * allChar.length));
+  }
+
+  return token;
+};
+
 // endpoint GET /talker
 app.get('/talker', async (_req, res) => {
   const talkers = await getTalkers(); 
@@ -43,6 +54,12 @@ app.get('/talker/:id', async (req, res) => {
   } else {
     res.status(HTTP_NOT_FOUND).json({ message });
   }
+});
+
+// endpoint POST /login
+app.post('/login', (_req, res) => {
+  const token = randomToken();
+  return res.status(HTTP_OK_STATUS).json({ token });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
