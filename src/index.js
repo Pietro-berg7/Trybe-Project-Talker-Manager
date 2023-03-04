@@ -7,6 +7,8 @@ const emailValidate = require('./middlewares/emailValidate');
 const tokenGenerator = require('./authentication/tokenGenerator');
 const passwordValidate = require('./middlewares/passwordValidate');
 const authorizationValidate = require('./middlewares/authorizationValidate');
+const nameValidate = require('./middlewares/nameValidate');
+const ageValidate = require('./middlewares/ageValidate');
 
 const app = express();
 app.use(express.json());
@@ -47,11 +49,15 @@ app.post('/login', emailValidate, passwordValidate, (_req, res) => {
 });
 
 // endpoint POST /talker
-app.post('/talker', authorizationValidate, async (req, res) => {
-  const getNewTalker = req.body;
-  const addTalker = await newTalker(getNewTalker);
-  return res.status(201).json(addTalker);
-});
+app.post('/talker',
+  authorizationValidate, 
+  nameValidate,
+  ageValidate,
+  async (req, res) => {
+    const getNewTalker = req.body;
+    const addTalker = await newTalker(getNewTalker);
+    return res.status(201).json(addTalker);
+  });
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
