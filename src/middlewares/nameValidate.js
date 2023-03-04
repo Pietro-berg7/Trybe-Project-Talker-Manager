@@ -1,13 +1,12 @@
 module.exports = (req, res, next) => {
   const { name } = req.body;
-  const HTTP_BAD_REQUEST = 400;
 
   if (!name) {
-    return res.status(HTTP_BAD_REQUEST).json({ message: 'O campo "name" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
 
   if (name.length < 3) {
-    return res.status(HTTP_BAD_REQUEST).json(
+    return res.status(400).json(
       {
         message: 'O "name" deve ter pelo menos 3 caracteres',
       },

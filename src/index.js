@@ -9,6 +9,9 @@ const passwordValidate = require('./middlewares/passwordValidate');
 const authorizationValidate = require('./middlewares/authorizationValidate');
 const nameValidate = require('./middlewares/nameValidate');
 const ageValidate = require('./middlewares/ageValidate');
+const talkValidate = require('./middlewares/talkValidate');
+const WatchedAtValidate = require('./middlewares/watchedAtValidate');
+const rateValidate = require('./middlewares/rateValidate');
 
 const app = express();
 app.use(express.json());
@@ -53,6 +56,9 @@ app.post('/talker',
   authorizationValidate, 
   nameValidate,
   ageValidate,
+  talkValidate,
+  WatchedAtValidate,
+  rateValidate,
   async (req, res) => {
     const getNewTalker = req.body;
     const addTalker = await newTalker(getNewTalker);
