@@ -22,6 +22,20 @@ const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND = 404;
 const PORT = '3000';
 
+// endpoint GET /talker/search?q=searchTerm
+app.get('/talker/search', authorizationValidate, async (req, res) => {
+  const talkers = await getTalkers();
+  const { q } = req.query;
+
+  if (!q) { 
+    return res.status(200).json(talkers);
+  }
+
+  const list = talkers.filter((element) => element.name.toLowerCase().includes(q.toLowerCase()));
+
+  return res.status(200).json(list);
+});
+
 // endpoint GET /talker
 app.get('/talker', async (_req, res) => {
   const talkers = await getTalkers(); 
