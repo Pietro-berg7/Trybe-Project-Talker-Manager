@@ -12,6 +12,7 @@ const ageValidate = require('./middlewares/ageValidate');
 const talkValidate = require('./middlewares/talkValidate');
 const WatchedAtValidate = require('./middlewares/watchedAtValidate');
 const rateValidate = require('./middlewares/rateValidate');
+const editTalker = require('./middlewares/editTalker');
 
 const app = express();
 app.use(express.json());
@@ -63,6 +64,21 @@ app.post('/talker',
     const getNewTalker = req.body;
     const addTalker = await newTalker(getNewTalker);
     return res.status(201).json(addTalker);
+  });
+
+// endpoint PUT /talker/:id
+app.put('/talker/:id',
+  authorizationValidate, 
+  nameValidate,
+  ageValidate,
+  talkValidate,
+  WatchedAtValidate,
+  rateValidate,
+  async (req, res) => {
+    const { id } = req.params;
+    const target = req.body;
+    const edited = await editTalker(Number(id), target);
+    return res.json(edited);
   });
 
 // não remova esse endpoint, e para o avaliador funcionar
