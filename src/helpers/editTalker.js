@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const getTalkers = require('../helpers/getTalkers');
+const getTalkers = require('./getTalkers');
 
 module.exports = async (id, newObj) => {
   const talker = await getTalkers();
